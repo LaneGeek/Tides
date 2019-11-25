@@ -23,34 +23,15 @@ class MainActivity : AppCompatActivity() {
         val highLow = arrayOf("L", "H", "L", "H", "L", "H", "L", "H", "L", "H")
 
         // Lets use Kotlin's functional programming here
-        val predictionInInches = predictionInCm.map { x -> x.toFloat() / 2.54 }
+        val predictionInInches = predictionInCm.map { x -> (x.toFloat() / 0.254).toInt().toFloat() / 10 }
+        val highLowNiceFormat = highLow.map { x -> if (x == "H") "High" else "Low"}
+        val output = Array(date.size) {""}
+        date.forEachIndexed { i, x -> output[i] = day[i] + " " + x + "\n" + time[i] + " - " + highLowNiceFormat[i]}
 
-        val anArray = arrayOf(
-            "Hello\nwhat is going on???",
-            "How are you today?",
-            "Hello",
-            "How are you today?",
-            "Hello",
-            "How are you today?",
-            " 34",
-            "67",
-            "Hello",
-            "How are you today?",
-            "Hello",
-            "How are you",
-            "today?",
-            "Hello",
-            "How are you today?",
-            "Hello",
-            "How are you today?",
-            "Hello",
-            "How are you today?"
-        )
+        listView.adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, output)
 
-        listView.adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, anArray)
-
-        listView.setOnItemClickListener { parent: AdapterView<*>?, view: View?, position: Int, id: Long ->
-            Toast.makeText(this, " X: ${anArray[position]}", Toast.LENGTH_SHORT).show()
+        listView.setOnItemClickListener { _: AdapterView<*>?, _: View?, position: Int, _: Long ->
+            Toast.makeText(this, "Tide Height: ${predictionInInches[position]} Inches", Toast.LENGTH_SHORT).show()
         }
     }
 }
